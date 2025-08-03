@@ -1,0 +1,26 @@
+---
+- name: Understanding Syntax
+  hosts: serverb.lab.example.com
+  become: true
+  tasks:
+
+  # Folded Syntax
+
+    - name: Ensuring httpd is installed using folded syntax
+      ansible.builtin.dnf: name=httpd state=present
+
+    - name: Staring and Enabling httpd service using folded syntax
+      ansible.builtin.service: name=httpd state=started enabled=true
+
+  # YAML Native Syntax
+
+    - name: Ensuring httpd is installed using YAML native syntax
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+    - name: Staring and Enabling httpd service using YAML native syntax
+      ansible.builtin.service:
+        name: httpd
+        state: stated
+        enabled: true

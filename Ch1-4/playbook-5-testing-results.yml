@@ -1,0 +1,106 @@
+---
+- name: Setup Apache Web Server on RHEL
+  hosts: servere.lab.example.com
+  become: true
+  vars:
+    # Define variables for reuse
+    firewall_service: http
+    web_package: httpd
+    web_service: httpd
+    web_content: |
+      <html>
+        <head><title>Test Page</title></head>
+        <body><h1>Apache is working!</h1></body>
+      </html>
+
+  tasks:
+    - name: Install Apache httpd
+      ansible.builtin.dnf:
+        name: "{{ web_package }}"
+        state: present
+      register: install_result
+      # Registers the result to check if the package was successfully installed
+
+    - name: Verify Apache was installed
+      ansible.builtin.debug:
+        msg: "Apache installed successfully."
+      when: install_result.changed or install_result.rc == 0
+      # Provides feedback only if the install task made changes or succeeded
+
+    - name: Deploy index.html to /var/www/html
+      ansible.builtin.copy:
+        content: "{{ web_content }}"
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: '0644'
+      register: copy_result
+      # Deploys a static HTML file as the default index page
+
+    - name: Check if index.html was copied
+      ansible.builtin.stat:
+        path: /var/www/html/index.html
+      register: index_file
+      # Verifies that the file was written to disk
+
+    - name: Validate content of index.html
+      ansible.builtin.shell: cat /var/www/html/index.html
+      register: index_content
+      changed_when: false
+      when: index_file.stat.exists
+      # Reads the file content to confirm it matches the expected HTML
+      # 'changed_when: false' ensures Ansible doesn’t mark this task as changed
+
+    - name: Assert the content of index.html is correct
+      ansible.builtin.assert:
+        that:
+          - "'<h1>Apache is working!</h1>' in index_content.stdout"
+        fail_msg: "index.html content is not correct."
+      # Ensures the content of index.html contains the expected string
+
+    - name: Start and enable Apache service
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        state: started
+        enabled: true
+      register: service_result
+      # Starts the Apache service and enables it on boot
+
+    - name: Check Apache service status
+      ansible.builtin.service:
+        name: "{{ web_service }}"
+        enabled: true
+      register: service_status
+      # Gets detailed information about the systemd unit (Apache)
+
+    - name: Assert Apache is running
+      ansible.builtin.assert:
+        that:
+          - service_status.status.ActiveState == "active"
+        fail_msg: "Apache service is not running."
+      # Asserts that Apache is actively running
+
+    - name: Allow HTTP service in the firewall
+      ansible.posix.firewalld:
+        service: "{{ firewall_service }}"
+        permanent: true
+        state: enabled
+        immediate: true
+      register: firewall_result
+      when: ansible_facts['os_family'] == "RedHat"
+      # Adds a firewall rule to allow HTTP traffic permanently and immediately
+
+    - name: Confirm firewall rule for HTTP
+      ansible.builtin.shell: firewall-cmd --list-all
+      register: firewall_config
+      changed_when: false
+      when: ansible_facts['os_family'] == "RedHat"
+      # Lists all active firewall rules to validate if 'http' is allowed
+
+    - name: Assert HTTP is in firewall allowed services
+      ansible.builtin.assert:
+        that:
+          - "'{{ firewall_service }}' in firewall_config.stdout"
+        fail_msg: "HTTP service is not allowed in the firewall."
+      when: ansible_facts['os_family'] == "RedHat"
+      # Verifies that the firewall allows HTTP connections

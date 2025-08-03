@@ -1,0 +1,4 @@
+---
+# defaults file for roles/web
+web_pkg: httpd
+web_svc: httpd

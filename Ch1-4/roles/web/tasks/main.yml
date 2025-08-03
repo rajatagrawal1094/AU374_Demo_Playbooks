@@ -1,0 +1,18 @@
+---
+# tasks file for roles/web
+- name: Ensuring the {{ web_pkg }} package is installed
+  ansible.builtin.dnf:
+    name: "{{ web_pkg }}"
+    state: present
+
+- name: Copying index.html
+  ansible.builtin.copy:
+    src: index.html
+    dest: /var/www/html/
+    mode: '0644'
+
+- name: Starting and Enabling {{ web_svc }}
+  ansible.builtin.service:
+    name: "{{ web_svc }}"
+    state: started
+    enabled: true

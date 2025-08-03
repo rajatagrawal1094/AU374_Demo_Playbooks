@@ -1,0 +1,25 @@
+---
+- name: Demo Playbook
+  hosts: servera.lab.example.com
+  become: true
+  tasks:
+
+  # The below tasks setup a basic web server
+
+    - name: Ensuring httpd is installed
+      ansible.builtin.dnf:
+        name: httpd
+        state: present
+
+  # Permissions are defined explicitly to the copied files
+    - name: Copying index.html
+      ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html/index.html
+        mode: '0644'
+
+    - name: Staring and Enabling httpd service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true

@@ -1,0 +1,72 @@
+---
+- name: Update Apache Web Server with rollback on failure
+  hosts: serverf.lab.example.com
+  become: true
+  vars:
+    web_service: httpd
+    web_package: httpd
+    web_root: /var/www/html
+    backup_dir: /var/www/html_backup_{{ ansible_date_time.iso8601 }}
+
+  tasks:
+
+    - name: Ensure Apache is installed
+      ansible.builtin.yum:
+        name: "{{ web_package }}"
+        state: present
+      # Ensures Apache is present before we attempt to update or restart it
+
+    - name: Begin Apache update with backup and rollback strategy
+      block:
+
+        - name: Create backup of current web root
+          ansible.builtin.copy:
+            src: "{{ web_root }}/"
+            dest: "{{ backup_dir }}/"
+            remote_src: true
+            owner: root
+            group: root
+            mode: preserve
+          # Back up the current web content using Ansible's copy module (recursive by default)
+
+        - name: Restart Apache to apply updates
+          ansible.builtin.service:
+            name: "{{ web_service }}"
+            state: restarted
+          # Restart Apache service. If this fails, the rescue block is triggered
+
+      rescue:
+
+        - name: Restore web content from backup if restart failed
+          ansible.builtin.copy:
+            src: "{{ backup_dir }}/"
+            dest: "{{ web_root }}/"
+            remote_src: true
+            owner: root
+            group: root
+            mode: preserve
+          # Restores the content from backup directory using remote source
+
+        - name: Restart Apache after rollback
+          ansible.builtin.service:
+            name: "{{ web_service }}"
+            state: restarted
+          # Tries to start Apache again after rollback
+
+        - name: Fail the play if rollback was triggered
+          ansible.builtin.fail:
+            msg: "Apache update failed and rollback was executed."
+          # Explicitly fails the play to indicate the update process did not succeed
+
+      always:
+
+        - name: Notify update process completion
+          ansible.builtin.debug:
+            msg: "Apache update process complete (success or failure)."
+          # This task runs no matter what, acting as a final notification
+
+        - name: Remove backup directory (cleanup)
+          ansible.builtin.file:
+            path: "{{ backup_dir }}"
+            state: absent
+          # Cleanup: Remove the backup directory regardless of success or failure
