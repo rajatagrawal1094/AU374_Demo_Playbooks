@@ -4,5 +4,6 @@ ansible-navigator:
     image: aap.lab.example.com/ee-supported-rhel8:latest
     pull: 
       policy: missing
+  mode: stdout
   playbook-artifact: 
-    enable: true
+    enable: false
