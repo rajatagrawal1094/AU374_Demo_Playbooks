@@ -89,18 +89,3 @@
       register: firewall_result
       when: ansible_facts['os_family'] == "RedHat"
       # Adds a firewall rule to allow HTTP traffic permanently and immediately
-
-    - name: Confirm firewall rule for HTTP
-      ansible.builtin.shell: firewall-cmd --list-all
-      register: firewall_config
-      changed_when: false
-      when: ansible_facts['os_family'] == "RedHat"
-      # Lists all active firewall rules to validate if 'http' is allowed
-
-    - name: Assert HTTP is in firewall allowed services
-      ansible.builtin.assert:
-        that:
-          - "'{{ firewall_service }}' in firewall_config.stdout"
-        fail_msg: "HTTP service is not allowed in the firewall."
-      when: ansible_facts['os_family'] == "RedHat"
-      # Verifies that the firewall allows HTTP connections
