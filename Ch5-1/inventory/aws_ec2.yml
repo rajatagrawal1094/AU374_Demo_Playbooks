@@ -1,0 +1,6 @@
+---
+plugin: amazon.aws.aws_ec2
+regions: 
+- ca-central-1
+access_key: <here>
+secret_key: <here> 
