@@ -1,0 +1,23 @@
+all: 
+  children: 
+    ungrouped: 
+      hosts: 
+        192.168.0.1:
+          usr: rajat
+        172.25.250.1: {}
+    usa: 
+      children: 
+        prod: 
+          hosts: 
+            servera.lab.example.com: {}
+            serverb.lab.example.com: {}
+          vars: 
+            pkg: httpd
+        test: 
+          hosts: 
+            serverc.lab.example.com: {}
+            serverd.lab.example.com: {}
+        dev: 
+          hosts: 
+            servere.lab.example.com: {}
+            serverf.lab.example.com: {}

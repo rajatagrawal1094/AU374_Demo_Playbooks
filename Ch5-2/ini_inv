@@ -1,0 +1,22 @@
+192.168.0.1 usr=rajat
+172.25.250.1
+
+[prod]
+servera.lab.example.com
+serverb.lab.example.com
+
+[prod:vars]
+pkg=httpd
+
+[test]
+serverc.lab.example.com
+serverd.lab.example.com
+
+[dev]
+servere.lab.example.com
+serverf.lab.example.com
+
+[usa:children]
+prod
+test
+dev
