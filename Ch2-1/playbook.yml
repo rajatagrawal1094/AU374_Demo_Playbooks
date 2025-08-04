@@ -1,0 +1,23 @@
+---
+- name: Using Collections
+  hosts: servera.lab.example.com
+  become: true
+  vars: 
+    pwd: redhat
+  tasks: 
+    - name: Installing httpd package
+      ansible.builtin.dnf: 
+        name: httpd
+        state: present
+
+    - name: Starting and Enabling web service
+      ansible.builtin.service: 
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Creating a user
+      ansible.builtin.user: 
+        name: user1
+        state: present
+        password: "{{ pwd | ansible.builtin.password_hash('sha512') }}"

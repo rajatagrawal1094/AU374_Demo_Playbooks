@@ -1,0 +1,10 @@
+---
+- name: Manage timesync
+  hosts: servera.lab.example.com
+  become: true
+  vars:
+    timesync_ntp_servers:
+      - hostname: classroom.example.com
+        iburst: true
+  roles:
+    - redhat.rhel_system_roles.timesync
