@@ -22,5 +22,5 @@
     - name: Staring and Enabling httpd service using YAML native syntax
       ansible.builtin.service:
         name: httpd
-        state: stated
+        state: started
         enabled: true
