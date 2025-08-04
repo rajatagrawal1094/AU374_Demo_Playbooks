@@ -1,0 +1,12 @@
+---
+collections: 
+  - name: community.cip
+
+  - name: community.clickhouse
+    version: 0.6.0
+
+  - name: community-crypto-3.0.2.tar
+    type: file
+
+  - name: git@github.com/ansible-collections/community.digitalocean.git
+    scm: git
