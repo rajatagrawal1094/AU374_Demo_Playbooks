@@ -8,5 +8,5 @@ collections:
   - name: community-crypto-3.0.2.tar
     type: file
 
-  - name: git@github.com/telekom-mms/ansible-collection-acme.git
+  - name: git@github.com:zjpeterson/ansible-tower-aci.git
     scm: git
