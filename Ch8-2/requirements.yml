@@ -1,0 +1,12 @@
+---
+collections: 
+  - name: community.cip
+    version: 1.0.1
+    source: https://galaxy.ansible.com/
+
+  - name: community.general
+    source: https://galaxy.ansible.com/
+    version: 11.1.2
+
+  - name: test-new_collection-1.0.0.tar.gz
+    type: file

@@ -1,0 +1,7 @@
+---
+# tasks file for roles/user
+- name: Creating a user {{ usr }}
+  ansible.builtin.user: 
+    name: "{{ usr }}"
+    password: "{{ pswd | ansible.builtin.password_hash('sha512') }}"
+    state: present

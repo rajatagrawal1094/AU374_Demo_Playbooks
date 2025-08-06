@@ -1,0 +1,9 @@
+2025-08-06T20:03:35.370990+00:00 ERROR 'ansible_navigator.actions.collections._parse' /usr/share/ansible/collections/ansible_collections/test/new_collection/roles/user/meta/argument_specs.yml Failed to find argument_specs.yml for role in test.new_collection.
+2025-08-06T20:03:35.371950+00:00 ERROR 'ansible_navigator.actions.collections._parse' /usr/share/ansible/collections/ansible_collections/community/general/plugins/inventory/iocage.py ComposerError (get_docstring): expected a single document in the stream
+  in "<unicode string>", line 3, column 1:
+    plugin: community.general.iocage
+    ^
+but found another document
+  in "<unicode string>", line 7, column 1:
+    ---
+    ^

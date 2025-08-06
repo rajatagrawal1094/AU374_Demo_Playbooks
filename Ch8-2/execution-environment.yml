@@ -1,0 +1,23 @@
+---
+version: 3
+
+images:
+  base_image:
+    name: aap.lab.example.com/ee-minimal-rhel8:latest
+
+dependencies:
+  galaxy: requirements.yml
+  python: requirements.txt
+  system: bindep.txt
+
+options:
+  package_manager_path: /usr/bin/microdnf
+
+additional_build_files:
+  - src: classroom-ca.pem
+    dest: certs/
+
+additional_build_steps:
+  prepend_galaxy:
+    - COPY _build/certs/classroom-ca.pem /etc/pki/ca-trust/course/anchors
+    - RUN update-ca-trust
