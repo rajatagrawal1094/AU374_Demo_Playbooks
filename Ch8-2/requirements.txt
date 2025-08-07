@@ -1,1 +1,4 @@
 funmotd
+boto
+boto3
+botocore
