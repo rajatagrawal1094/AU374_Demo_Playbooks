@@ -1,0 +1,7 @@
+---
+- name: testing default filter
+  hosts: servera.lab.example.com
+  tasks: 
+    - name: print a value of the variable
+      ansible.builtin.debug: 
+        msg: The color is {{ clr | default('green') }}
