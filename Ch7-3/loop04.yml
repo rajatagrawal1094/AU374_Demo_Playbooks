@@ -1,0 +1,9 @@
+- name: Both tasks have the same result
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+    - name: Testing fileglob
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      with_fileglob: "/etc/bash*"

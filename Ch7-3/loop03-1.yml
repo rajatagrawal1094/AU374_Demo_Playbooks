@@ -1,0 +1,38 @@
+- name: Create users and assign to groups using nested loop
+  hosts: servera.lab.example.com
+  become: true
+  gather_facts: false
+
+  vars:
+    user_list:
+      - alice
+      - bob
+
+    group_list:
+      - developers
+      - testers
+
+  tasks:
+
+    - name: Ensure groups exist
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ group_list }}"
+
+    - name: Ensure users exist
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ user_list }}"
+
+    - name: Add each user to each group
+      ansible.builtin.user:
+        name: "{{ item.0 }}"
+        groups: "{{ item.1 }}"
+        append: true
+        state: present
+      with_nested:
+        - "{{ user_list }}"
+        - "{{ group_list }}"
+
