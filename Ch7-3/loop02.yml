@@ -1,0 +1,25 @@
+---
+- name: creating users
+  hosts: servera.lab.example.com
+  become: true
+  vars: 
+    grps: 
+      - group1
+      - group2
+      - group3
+      - group4
+  vars_files:
+    - user_dict.yml
+  tasks: 
+    - name: Creating groups
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ grps }}"
+    - name: Creating multiple users
+      ansible.builtin.user: 
+        name: "{{ item['key'] }}"
+        group: "{{ item['value']['groups'] }}"
+        shell: "{{ item['value']['shell'] }}"
+        state: present
+      loop: "{{ lookup('ansible.builtin.dict', users) }}"

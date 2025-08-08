@@ -1,0 +1,16 @@
+---
+- name: testing lookup plugins and filters
+  hosts: servera.lab.example.com
+  become: true
+  tasks: 
+    - name: Creating users
+      vars:
+        custom_password: "{{ lookup('ansible.builtin.password', 'credentials/' ~ item ~ ' length=16') }}"
+      ansible.builtin.user:
+        name: "{{ item }}"
+        password: "{{ custom_password | ansible.builtin.password_hash('sha512') }}"
+        state: "{{ state_by_user | default('present') }}"
+      loop: "{{ query('ansible.builtin.lines', 'cat users.txt') }}"
+
+# Run the following command to test
+# ssh -o PreferredAuthentications=password user@host

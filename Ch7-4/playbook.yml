@@ -1,0 +1,79 @@
+- name: Demonstrate ansible.utils.ipaddr filter options
+  hosts: servera.lab.example.com
+  gather_facts: false
+
+  vars:
+    ip_list:
+      - 192.168.1.10
+      - 192.168.1.20
+      - 70.25.250.0
+      - 10.0.0.5
+      - 172.16.0.3
+      - fe80::1
+      - 2001:db8::ff00:42:8329
+      - invalid_ip
+      - 127.0.0.1
+      - 224.0.0.1
+      - fc00::1
+
+    single_ipv4: "192.168.1.10/24"
+    single_ipv6: "2001:db8::1"
+    cidr_block: "192.168.1.0/24"
+
+  tasks:
+
+    - name: Filter IPv4 addresses
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('ipv4') }}"
+
+    - name: Filter IPv6 addresses
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('ipv6') }}"
+
+    - name: IPs in subnet 192.168.1.0/24
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('192.168.1.0/24') }}"
+
+    - name: IPs in subnet 10.0.0.0/8
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('10.0.0.0/8') }}"
+
+    - name: Filter public IPs
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('public') }}"
+
+    - name: Filter private IPs
+      ansible.builtin.debug: 
+       msg: "{{ ip_list | ansible.utils.ipaddr('private') }}"
+
+    - name: Filter link-local IPs
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('link-local') }}"
+
+    - name: Filter loopback IPs
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('loopback') }}"
+
+    - name: Filter unicast IPs
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('unicast') }}"
+
+    - name: Filter multicast IPs
+      ansible.builtin.debug: 
+        msg: "{{ ip_list | ansible.utils.ipaddr('multicast') }}"
+
+    - name: Netmask of CIDR block
+      ansible.builtin.debug: 
+        msg: "{{ cidr_block | ansible.utils.ipaddr('netmask') }}"
+
+    - name: Network address
+      ansible.builtin.debug: 
+        msg: "{{ cidr_block | ansible.utils.ipaddr('network') }}"
+
+    - name: Broadcast address
+      ansible.builtin.debug: 
+        msg: "{{ single_ipv4 | ansible.utils.ipaddr('broadcast') }}"
+
+    - name: Prefix length
+      ansible.builtin.debug: 
+        msg: "{{ single_ipv4 | ansible.utils.ipaddr('prefix') }}"

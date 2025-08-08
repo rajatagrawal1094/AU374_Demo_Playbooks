@@ -1,0 +1,13 @@
+---
+- name: creating users
+  hosts: servera.lab.example.com
+  become: true
+  tasks: 
+    - name: Creating multiple users
+      ansible.builtin.user: 
+        name: "{{ usr }}"
+        state: present
+      loop: 
+        - user1
+        - user2
+        - user3

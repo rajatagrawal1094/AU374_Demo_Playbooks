@@ -1,0 +1,13 @@
+users: 
+  user1: 
+    groups: group1
+    shell: /bin/bash
+  user2: 
+    groups: group2
+    shell: /bin/bash
+  user3: 
+    groups: group3
+    shell: /bin/sh
+  user4: 
+    groups: group4
+    shell: /bin/sh

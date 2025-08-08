@@ -1,0 +1,61 @@
+---
+- name: testing filters
+  hosts: servera.lab.example.com
+  gather_facts: false
+  vars: 
+    keyw: ansible
+    first_name: RAJAT
+    last_name: agrawal
+    email: RAGRAWAL@REDHAT.COM
+    course: au374
+    nmbrs: 
+      - 1
+      - 8
+      - 18
+      - 23
+      - 55
+      - 1
+      - 9
+      - 5
+      - 99
+      - 206
+      - 23
+  tasks: 
+    - name: printing sum of all numbers
+      ansible.builtin.debug: 
+        msg: sum of all numbers is {{ nmbrs | sum }}
+
+    - name: the first number
+      ansible.builtin.debug: 
+        msg: sum of all numbers is {{ nmbrs | first }}
+
+    - name: the last number 
+      ansible.builtin.debug: 
+        msg: sum of all numbers is {{ nmbrs | last }}
+
+    - name: the length of list
+      ansible.builtin.debug: 
+        msg: the length of the list is {{ nmbrs | length }}
+
+    - name: printing random number from the list
+      ansible.builtin.debug: 
+        msg: the random number is {{ nmbrs | random }}
+
+    - name: sorting and unique
+      ansible.builtin.debug: 
+        msg: "{{ nmbrs | sort | unique }}"
+
+    - name: printing sha1 hash for a string
+      ansible.builtin.debug: 
+        msg: The sha1 hash for {{ keyw }} is {{ keyw | hash('sha1') }}
+
+    - name: printing base64 value
+      ansible.builtin.debug: 
+        msg: The base64 value is {{ keyw | b64encode }}
+
+    - name: printing some data
+      ansible.builtin.debug: 
+        msg: |
+          The name is {{ first_name | capitalize }} {{ last_name | capitalize }}
+          The email is {{ email | lower }}
+          The course code is {{ course | upper }}

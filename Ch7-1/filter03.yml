@@ -1,0 +1,20 @@
+- name: Example of map filter in Ansible
+  hosts: servera.lab.example.com
+  gather_facts: false
+  vars:
+    users:
+      - name: alice
+        uid: 1001
+      - name: bob
+        uid: 1002
+      - name: carol
+        uid: 1003
+
+  tasks:
+    - name: Extract usernames using map filter
+      debug:
+        msg: "{{ users | map(attribute='name') | list }}"
+
+    - name: Filter users with uid > 1001
+      debug:
+        msg: "{{ users | selectattr('uid', '>', 1001) | map(attribute='name') | list }}"

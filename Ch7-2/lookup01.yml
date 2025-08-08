@@ -1,0 +1,38 @@
+- name: testing lookup plugins
+  hosts: servera.lab.example.com
+  tasks:
+    - name: Read file content using lookup
+      ansible.builtin.debug: 
+        msg: "{{ lookup('ansible.builtin.file', '/etc/hosts') }}"
+
+    - name: Read 2 files content using lookup
+      ansible.builtin.debug: 
+        msg: "{{ lookup('ansible.builtin.file', '/etc/hosts', '/etc/issue') }}"
+
+    - name: Read 2 files content using query
+      ansible.builtin.debug: 
+        msg: "{{ query('ansible.builtin.file', '/etc/hosts', '/etc/issue') }}"
+
+    - name: Reading a template
+      ansible.builtin.debug: 
+        msg: "{{ lookup('ansible.builtin.template', 'hello_world.j2') }}"
+
+    - name: Running a command using lookup
+      ansible.builtin.debug: 
+        msg: "{{ lookup('ansible.builtin.pipe', 'ls /tmp') }}"
+
+    - name: Running a command using lookup
+      ansible.builtin.debug: 
+        msg: "{{ lookup('ansible.builtin.lines', 'ls /tmp') }}"
+
+    - name: Running a command using query
+      ansible.builtin.debug: 
+        msg: "{{ query('ansible.builtin.lines', 'ls /tmp') }}"
+
+    - name: Lookup up a URL
+      ansible.builtin.debug: 
+        msg: "{{ lookup('ansible.builtin.url', 'http://classroom.example.com') }}"
+
+    - name: Looking up an environment variable
+      ansible.builtin.debug: 
+        msg: "{{ lookup('ansible.builtin.env', 'HOME') }}"
